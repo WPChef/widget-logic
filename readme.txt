@@ -1,36 +1,22 @@
 === Widget Logic ===
-Contributors: wpchefgadget, alanft
-Donate link: http://www.justgiving.com/widgetlogic_cancerresearchuk
+Contributors: wpchefgadget
 Tags: widget, admin, conditional tags, filter, context
 Requires at least: 3.0
-Tested up to: 4.9
-Stable tag: 5.9.0
-License: GPLv2 or later
+Tested up to: 5.0.3
+Stable tag: 5.9.1
 
-Widget Logic lets you control on which pages widgets appear using WP's conditional tags. It also adds a 'widget_content' filter.
+Widget Logic lets you control on which pages widgets appear using WP's conditional tags.
 
 == Description ==
 This plugin gives every widget an extra control field called "Widget logic" that lets you control the pages that the widget will appear on. The text field lets you use WP's [Conditional Tags](http://codex.wordpress.org/Conditional_Tags), or any general PHP code.
 
 PLEASE NOTE The widget logic you introduce is EVAL'd directly. Anyone who has access to edit widget appearance will have the right to add any code, including malicious and possibly destructive functions. There is an optional filter 'widget_logic_eval_override' which you can use to bypass the EVAL with your own code if needed. (See [Other Notes](other_notes/)).
 
-There is also an option to add a wordpress 'widget_content' filter -- this lets you tweak any widget's HTML to suit your theme without editing plugins and core code.
-
-= Donations =
-
-If you like and use Widget Logic you could consider a small donation to Cancer Research UK. I have a [JustGiving.com donation link](http://www.justgiving.com/widgetlogic_cancerresearchuk). As of February 2017 we have raised 1,048.50 UKP.
-
-== Installation ==
-
-1. Upload `widget-logic.php` to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. That's it. The configuring and options are in the usual widget admin interface.
+The configuring and options are in the usual widget admin interface.
 
 = Configuration =
 
 Aside from logic against your widgets, there are three options added to the foot of the widget admin page (see screenshots).
-
-* Add 'widget_content' filter -- This allows you to modify the text output in all widgets. You need to know how to write a WP filter, though some basics are covered in [Other Notes](../other_notes/).
 
 * Use 'wp_reset_query' fix -- Many features of WP, as well as the many themes and plugins out there, can mess with the conditional tags, such that is_home is NOT true on the home page. This can often be fixed with a quick wp_reset_query() statement just before the widgets are called, and this option puts that in for you rather than having to resort to code editing
 
@@ -45,10 +31,6 @@ Aside from logic against your widgets, there are three options added to the foot
 *  Don't cache widget logic results -- From v .58 the widget logic code should only execute once, but that might cause unexpected results with some themes, so this option is here to turn that behaviour off. (The truth/false of the code will be evaluated every time the sidebars_widgets filter is called.
 
 == Frequently Asked Questions ==
-
-= I upgraded to Version 5.7.0 and my site's widgets now behave differently =
-
-There was an important change to how your Widget Logic code is evaluated. There is a new default 'Load logic' point of 'after query variables set'. For most people this should be better, but you could try reverting to the old default 'when plugin starts'.
 
 = What can I try if it's not working? =
 
@@ -115,9 +97,13 @@ Tighten up your definitions with PHPs 'logical AND' &&, for example:
 == Screenshots ==
 
 1. The 'Widget logic' field at work in standard widgets.
-2. The plugin options are at the foot of the usual widget admin page… `widget_content` filter, `wp_reset_query` option, 'load logic point' and 'evaluate more than once'. You can also export and import your site's WL options as a plain text file for a quick backup/restore and to help troubleshoot issues.
+2. The plugin options are at the foot of the usual widget admin page… `wp_reset_query` option, 'load logic point' and 'evaluate more than once'. You can also export and import your site's WL options as a plain text file for a quick backup/restore and to help troubleshoot issues.
 
 == Changelog ==
+
+= 5.9.1 =
+
+The widget_content filter option has been removed from the settings block, but kept in the code for backward compatibility. The plan is to remove this filter completely if possible and make the plugin simpler (let us know what you think).
 
 = 5.9.0 =
 
@@ -271,44 +257,3 @@ Note the extra ';' on the end where there is an explicit 'return'.
 
 == The 'widget_logic_eval_override' filter ==
 Before the Widget Logic code is evaluated for each widget, the text of the Widget Logic code is passed through this filter. If the filter returns a BOOLEAN result, this is used instead to determine if the widget is visible. Return TRUE for visible.
-
-== The 'widget_content' filter ==
-
-When this option is active (tick the option tickbox at the foot of the widget admin page) you can modify the text displayed by ANY widget from your own theme's functions.php file. Hook into the filter with:
-
-`add_filter('widget_content', 'your_filter_function', [priority], 2);`
-
-where `[priority]` is the optional priority parameter for the [add_filter](http://codex.wordpress.org/Function_Reference/add_filter) function. The filter function can take a second parameter (if you provde that last parameter '2') like this:
-
-`function your_filter_function($content='', $widget_id='')`
-
-The second parameter ($widget_id) can be used to target specific widgets if needed.
-
-A [Wordpress filter function](http://codex.wordpress.org/Plugin_API#Filters) 'takes as input the unmodified data, and returns modified data' which means that widget_content filters are provided with the raw HTML output by the widget, and you are then free to return something else entirely:
-
-= Example filters =
-
-`add_filter('widget_content', 'basic_widget_content_filter');
-function basic_widget_content_filter($content='')
-{	return $content."<PRE>THIS APPEARS AFTER EVERY WIDGET</PRE>";
-}`
-
-I was motivated to make this filter in order to render all widget titles with the excellent [ttftitles plugin](http://templature.com/2007/10/18/ttftitles-wordpress-plugin/) like this:
-
-`add_filter('widget_content', 'ttftext_widget_title');
-function ttftext_widget_title($content='')
-{	preg_match("/<h2[^>]*>([^<]+)/",$content, $matches);
-	$heading=$matches[1];
-	$insert_img=the_ttftext( $heading, false );
-	$content=preg_replace("/(<h2[^>]*>)[^<]+/","$1$insert_img",$content,1);
-	return $content;
-}`
-
-People often ask for a way to give widgets alternating styles. This filter inserts widget_style_a/widget_style_b into the class="widget ..." text usually found in a widget's main definition:
-
-`add_filter('widget_content', 'make_alternating_widget_styles');
-function make_alternating_widget_styles($content='')
-{	global $wl_make_alt_ws;
-	$wl_make_alt_ws=($wl_make_alt_ws=="style_a")?"style_b":"style_a";
-	return preg_replace('/(class="widget )/', "$1 widget_${wl_make_alt_ws} ", $content);
-}`

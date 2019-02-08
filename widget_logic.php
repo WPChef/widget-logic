@@ -1,13 +1,11 @@
 <?php
 /*
-Plugin Name:    Widget Logic
-Plugin URI:     http://wordpress.org/extend/plugins/widget-logic/
-Description:    Control widgets with WP's conditional tags is_home etc
-Version:        5.9.0
-Author:         wpchefgadget, alanft
-
-Text Domain:   widget-logic
-Domain Path:   /languages/
+Plugin Name: Widget Logic
+Author URI:  https://wpchef.org
+Description: Control widgets with WP's conditional tags is_home etc
+Version:     5.9.1
+Author:      WPChef
+Text Domain: widget-logic
 */
 
 DEFINE( 'WIDGET_LOGIC_VERSION', '5.7.0' );
@@ -173,7 +171,10 @@ function widget_logic_expand_control()
 	// must update this to use http://codex.wordpress.org/Settings_API
 	if ( isset($_POST['widget_logic-options-submit']) )
 	{
-		$wl_options['widget_logic-options-filter'] = !empty($_POST['widget_logic-options-filter']);
+		if ( !empty($_POST['widget_logic-options-filter']) )
+			$wl_options['widget_logic-options-filter'] = true;
+		else
+			unset( $wl_options['widget_logic-options-filter'] );
 		$wl_options['widget_logic-options-wp_reset_query'] = !empty($_POST['widget_logic-options-wp_reset_query']);
 		$wl_options['widget_logic-options-show_errors'] = !empty($_POST['widget_logic-options-show_errors']);
 		$wl_options['widget_logic-options-load_point']=$_POST['widget_logic-options-load_point'];
@@ -209,11 +210,13 @@ function widget_logic_options_control()
 		<h2><?php _e('Widget Logic options', 'widget-logic'); ?></h2>
 		<form method="POST" style="float:left; width:45%">
 			<ul>
+				<?php if ( !empty($wl_options['widget_logic-options-filter']) ): ?>
 				<li><label for="widget_logic-options-filter" title="<?php _e('Adds a new WP filter you can use in your own code. Not needed for main Widget Logic functionality.', 'widget-logic'); ?>">
 					<input id="widget_logic-options-filter" name="widget_logic-options-filter" type="checkbox" value="checked" class="checkbox" <?php if (!empty($wl_options['widget_logic-options-filter'])) echo "checked" ?>/>
 					<?php _e('Add \'widget_content\' filter', 'widget-logic'); ?>
 					</label>
 				</li>
+				<?php endif ?>
 				<li><label for="widget_logic-options-wp_reset_query" title="<?php _e('Resets a theme\'s custom queries before your Widget Logic is checked', 'widget-logic'); ?>">
 					<input id="widget_logic-options-wp_reset_query" name="widget_logic-options-wp_reset_query" type="checkbox" value="checked" class="checkbox" <?php if (!empty($wl_options['widget_logic-options-wp_reset_query'])) echo "checked" ?> />
 					<?php _e('Use \'wp_reset_query\' fix', 'widget-logic'); ?>
