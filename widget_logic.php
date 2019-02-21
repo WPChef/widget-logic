@@ -8,16 +8,6 @@ Author:      WPChef
 Text Domain: widget-logic
 */
 
-DEFINE( 'WIDGET_LOGIC_VERSION', '5.7.0' );
-
-register_activation_hook( __FILE__, 'widget_logic_activate' );
-
-function widget_logic_activate()
-{
-	add_option( 'widget_logic_version', WIDGET_LOGIC_VERSION, '', 'no' );
-	update_option( 'widget_logic_version', WIDGET_LOGIC_VERSION );
-}
-
 $plugin_dir = basename(dirname(__FILE__));
 global $wl_options, $wl_in_customizer;
 
