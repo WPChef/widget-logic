@@ -297,6 +297,7 @@ function widget_logic_extra_control()
 			<?php else: ?>
 			<textarea class="widefat" name="<?php echo $input_name ?>" id="<?php echo $input_id ?>"><?php echo esc_textarea( $logic ) ?></textarea>
 			<?php endif ?>
+			<?php wp_nonce_field( 'widget_logic_save', 'widget_logic_nonce' ); ?>
 		</p>
 	<?php
 	return true;
@@ -356,12 +357,12 @@ function widget_logic_save( $widget_id, $logic )
 		$info[ $widget_i ]['widget_logic'] = $logic;
 		update_option( 'widget_'.$widget_class, $info );
 	}
-	else
-	{
-		$info = (array)get_option( 'widget_'.$widget_id, array() );
-		$info['widget_logic'] = $logic;
-		update_option( 'widget_'.$widget_id, $info );
-	}
+	else if( isset( $_POST['widget_logic_nonce'] ) && wp_verify_nonce( $_POST['widget_logic_nonce'], 'widget_logic_save') ) {
+
+        $info = (array)get_option( 'widget_'.$widget_id, array() );
+        $info['widget_logic'] = $logic;
+        update_option( 'widget_'.$widget_id, $info );
+    }
 }
 
 // CALLED ON 'sidebars_widgets' FILTER
