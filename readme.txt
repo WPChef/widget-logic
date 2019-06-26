@@ -1,9 +1,9 @@
 === Widget Logic ===
 Contributors: wpchefgadget
-Tags: widget, admin, conditional tags, filter, context
+Tags: widget, sidebar, content, conditional tags, toggle
 Requires at least: 3.0
-Tested up to: 5.0.3
-Stable tag: 5.9.1
+Tested up to: 5.2.2
+Stable tag: 5.10.2
 
 Widget Logic lets you control on which pages widgets appear using WP's conditional tags.
 
@@ -101,9 +101,11 @@ Tighten up your definitions with PHPs 'logical AND' &&, for example:
 
 == Changelog ==
 
-= 5.9.1 =
+= 5.10.2 =
 
-The widget_content filter option has been removed from the settings block, but kept in the code for backward compatibility. The plan is to remove this filter completely if possible and make the plugin simpler (let us know what you think).
+* The plugin's security has been improved, big thanks to [Paul Dannewitz](https://dannewitz.ninja/) for his excellent security audit!
+* The widget_content filter option has been removed from the settings block, but kept in the code for backward compatibility. The plan is to remove it completely and make the plugin simpler (let us know what you think).
+* Code cleanup.
 
 = 5.9.0 =
 
