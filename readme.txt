@@ -3,7 +3,7 @@ Contributors: wpchefgadget
 Tags: widget, sidebar, content, conditional tags, toggle
 Requires at least: 3.0
 Tested up to: 5.2.2
-Stable tag: 5.10.2
+Stable tag: 5.10.3
 
 Widget Logic lets you control on which pages widgets appear using WP's conditional tags.
 
