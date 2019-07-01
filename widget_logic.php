@@ -103,7 +103,7 @@ function widget_logic_expand_control()
 
 
 	// IMPORT ALL OPTIONS
-	if ( isset($_POST['wl-options-import']))
+	if ( isset($_POST['wl-options-import']) && current_user_can('administrator') && isset( $_POST['widget_logic_nonce'] ) && wp_verify_nonce( $_POST['widget_logic_nonce'], 'widget_logic_import'))
 	{	if ($_FILES['wl-options-import-file']['tmp_name'])
 		{	$import=explode("\n",file_get_contents($_FILES['wl-options-import-file']['tmp_name'], false));
 			if (array_shift($import)=="[START=WIDGET LOGIC OPTIONS]" && array_pop($import)=="[STOP=WIDGET LOGIC OPTIONS]")
@@ -128,7 +128,7 @@ function widget_logic_expand_control()
 
 	// UPDATE OTHER WIDGET LOGIC OPTIONS
 	// must update this to use http://codex.wordpress.org/Settings_API
-	if ( isset($_POST['widget_logic-options-submit']) )
+	if ( isset($_POST['widget_logic-options-submit']) && current_user_can('administrator') && isset( $_POST['widget_logic_nonce'] ) && wp_verify_nonce( $_POST['widget_logic_nonce'], 'widget_logic_settings') )
 	{
 		if ( !empty($_POST['widget_logic-options-filter']) )
 			$wl_options['widget_logic-options-filter'] = true;
@@ -136,7 +136,7 @@ function widget_logic_expand_control()
 			unset( $wl_options['widget_logic-options-filter'] );
 		$wl_options['widget_logic-options-wp_reset_query'] = !empty($_POST['widget_logic-options-wp_reset_query']);
 		$wl_options['widget_logic-options-show_errors'] = !empty($_POST['widget_logic-options-show_errors']);
-		$wl_options['widget_logic-options-load_point']=$_POST['widget_logic-options-load_point'];
+		$wl_options['widget_logic-options-load_point'] = sanitize_text_field($_POST['widget_logic-options-load_point']);
 	}
 
 
@@ -206,6 +206,8 @@ function widget_logic_options_control()
 					<?php esc_html_e('Display logic errors to admin', 'widget-logic'); ?>
 					</label>
 			</ul>
+
+			<?php wp_nonce_field( 'widget_logic_settings', 'widget_logic_nonce' ); ?>
 			<?php submit_button( __( 'Save WL options', 'widget-logic' ), 'button-primary', 'widget_logic-options-submit', false ); ?>
 
 		</form>
@@ -213,7 +215,9 @@ function widget_logic_options_control()
 			<a class="submit button" href="?wl-options-export" title="<?php _e('Save all WL options to a plain text config file', 'widget-logic'); ?>"><?php _e('Export options', 'widget-logic'); ?></a><p>
 			<?php submit_button( __( 'Import options', 'widget-logic' ), 'button', 'wl-options-import', false, array('title'=> __( 'Load all WL options from a plain text config file', 'widget-logic' ) ) ); ?>
 			<input type="file" name="wl-options-import-file" id="wl-options-import-file" title="<?php _e('Select file for importing', 'widget-logic'); ?>" /></p>
-		</form>
+
+			<?php wp_nonce_field( 'widget_logic_import', 'widget_logic_nonce' ); ?>
+        </form>
 
 	</div>
 
