@@ -101,6 +101,10 @@ Tighten up your definitions with PHPs 'logical AND' &&, for example:
 
 == Changelog ==
 
+= 5.10.3 =
+
+* Security update. Huge thanks to the [Plugin Vulnerabilities](https://www.pluginvulnerabilities.com/) Team!
+
 = 5.10.2 =
 
 * The plugin's security has been improved, big thanks to [Paul Dannewitz](https://dannewitz.ninja/) for his excellent security audit!
