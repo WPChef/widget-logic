@@ -3,7 +3,7 @@
 Plugin Name: Widget Logic
 Author URI:  https://wpchef.org
 Description: Control widgets with WP's conditional tags is_home etc
-Version:     5.10.3
+Version:     5.10.4
 Author:      WPChef
 Text Domain: widget-logic
 */

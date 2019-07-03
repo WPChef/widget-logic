@@ -3,7 +3,7 @@ Contributors: wpchefgadget
 Tags: widget, sidebar, content, conditional tags, toggle
 Requires at least: 3.0
 Tested up to: 5.2.2
-Stable tag: 5.10.3
+Stable tag: 5.10.4
 
 Widget Logic lets you control on which pages widgets appear using WP's conditional tags.
 
@@ -100,6 +100,10 @@ Tighten up your definitions with PHPs 'logical AND' &&, for example:
 2. The plugin options are at the foot of the usual widget admin page… `wp_reset_query` option, 'load logic point' and 'evaluate more than once'. You can also export and import your site's WL options as a plain text file for a quick backup/restore and to help troubleshoot issues.
 
 == Changelog ==
+
+= 5.10.4 =
+
+* Security update. The export feature has been protected with nonce.
 
 = 5.10.3 =
 
