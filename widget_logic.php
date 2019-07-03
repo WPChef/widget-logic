@@ -3,7 +3,7 @@
 Plugin Name: Widget Logic
 Author URI:  https://wpchef.org
 Description: Control widgets with WP's conditional tags is_home etc
-Version:     5.10.3
+Version:     5.10.4
 Author:      WPChef
 Text Domain: widget-logic
 */
@@ -89,7 +89,7 @@ function widget_logic_expand_control()
 
 
 	// EXPORT ALL OPTIONS
-	if (isset($_GET['wl-options-export']))
+	if (isset($_GET['wl-options-export']) && isset( $_GET['widget_logic_nonce'] ) && wp_verify_nonce( $_GET['widget_logic_nonce'], 'widget_logic_export'))
 	{
 		header("Content-Disposition: attachment; filename=widget_logic_options.txt");
 		header('Content-Type: text/plain; charset=utf-8');
@@ -212,7 +212,7 @@ function widget_logic_options_control()
 
 		</form>
 		<form method="POST" enctype="multipart/form-data" style="float:left; width:45%">
-			<a class="submit button" href="?wl-options-export" title="<?php _e('Save all WL options to a plain text config file', 'widget-logic'); ?>"><?php _e('Export options', 'widget-logic'); ?></a><p>
+			<a class="submit button" href="<?php echo wp_nonce_url( '?wl-options-export', 'widget_logic_export', 'widget_logic_nonce' ); ?>" title="<?php _e('Save all WL options to a plain text config file', 'widget-logic'); ?>"><?php _e('Export options', 'widget-logic'); ?></a><p>
 			<?php submit_button( __( 'Import options', 'widget-logic' ), 'button', 'wl-options-import', false, array('title'=> __( 'Load all WL options from a plain text config file', 'widget-logic' ) ) ); ?>
 			<input type="file" name="wl-options-import-file" id="wl-options-import-file" title="<?php _e('Select file for importing', 'widget-logic'); ?>" /></p>
 
