@@ -22,19 +22,16 @@ function widget_logic_init()
 if((!$wl_options = get_option('widget_logic')) || !is_array($wl_options) )
 	$wl_options = array();
 
-if (is_admin())
-{
-	add_filter( 'in_widget_form', 'widget_logic_in_widget_form', 10, 3 );
-	add_filter( 'widget_update_callback', 'widget_logic_update_callback', 10, 4);
+add_filter( 'in_widget_form', 'widget_logic_in_widget_form', 10, 3 );
+add_filter( 'widget_update_callback', 'widget_logic_update_callback', 10, 4);
 
-	add_action( 'sidebar_admin_setup', 'widget_logic_expand_control');
-	// before any HTML output save widget changes and add controls to each widget on the widget admin page
-	add_action( 'sidebar_admin_page', 'widget_logic_options_control');
+add_action( 'sidebar_admin_setup', 'widget_logic_expand_control');
+// before any HTML output save widget changes and add controls to each widget on the widget admin page
+add_action( 'sidebar_admin_page', 'widget_logic_options_control');
 
-	add_action( 'widgets_init', 'widget_logic_add_controls', 999 );
-}
-else
-{
+add_action( 'widgets_init', 'widget_logic_add_controls', 999 );
+
+if ( !is_admin() ) {
 	$loadpoint = isset($wl_options['widget_logic-options-load_point']) ? (string)@$wl_options['widget_logic-options-load_point'] : '';
 	if ( 'plugins_loaded' == $loadpoint )
 		widget_logic_sidebars_widgets_filter_add();
