@@ -2,8 +2,8 @@
 Contributors: wpchefgadget
 Tags: widget, sidebar, content, conditional tags, toggle
 Requires at least: 3.0
-Tested up to: 5.2.2
-Stable tag: 5.10.4
+Tested up to: 5.8
+Stable tag: 6.0.0
 
 Widget Logic lets you control on which pages widgets appear using WP's conditional tags.
 
@@ -14,57 +14,19 @@ PLEASE NOTE The widget logic you introduce is EVAL'd directly. Anyone who has ac
 
 The configuring and options are in the usual widget admin interface.
 
-= Configuration =
-
-Aside from logic against your widgets, there are three options added to the foot of the widget admin page (see screenshots).
-
-* Use 'wp_reset_query' fix -- Many features of WP, as well as the many themes and plugins out there, can mess with the conditional tags, such that is_home is NOT true on the home page. This can often be fixed with a quick wp_reset_query() statement just before the widgets are called, and this option puts that in for you rather than having to resort to code editing
-
-* Load logic -- This option allows you to set the point in the page load at which your widget logic if first checked. Pre v.50 it was when the 'wp_head' trigger happened, ie during the creation of the HTML's HEAD block. Many themes didn't call wp_head, which was a problem. From v.50 it happens, by default, as early as possible, which is as soon as the plugin loads. You can now specify these 'late load' points (in chronological order):
-	* after the theme loads (after_setup_theme trigger)
-	* when all PHP loaded (wp_loaded trigger)
-	* after query variables set (parse_query) – this is the default
-	* during page header (wp_head trigger)
-
-	You may need to delay the load if your logic depends on functions defined, eg in the theme functions.php file. Conversely you may want the load early so that the widget count is calculated correctly, eg to show an alternative layour or content when a sidebar has no widgets.
-
-*  Don't cache widget logic results -- From v .58 the widget logic code should only execute once, but that might cause unexpected results with some themes, so this option is here to turn that behaviour off. (The truth/false of the code will be evaluated every time the sidebars_widgets filter is called.
-
 == Frequently Asked Questions ==
 
 = What can I try if it's not working? =
 
-* Switch to the default theme. If the problem goes away, your theme may be interfering with the WP conditional tags or how widgets work
-* Try the `wp_reset_query` option. If your theme performs custom queries before calling the dynamic sidebar this might help.
-* Try a different 'Load logic' point. Most wordpress conditional tags only work 'after query variables set', but some plugins may require evaluation earlier or later.
-* The 'Evaluate widget logic more than once' option may be needed if you have to use an early 'Load logic' point.
-
+* Switch to the default theme. If the problem goes away, your theme may be interfering with the WP conditional tags or how widgets work.
 
 = I'm getting errors that read like "PHP Parse error… … eval()'d code on line 1" =
 
-You have a PHP syntax error in one of your widget's Widget Logic fields. Review them for errors. You might find it easiest to check by using 'Export options' and reading the code there (Though be aware that single and double quotes are escaped with multiple backslash characters.)
-
-If you are having trouble finding the syntax error, a simple troubleshooting method is to use 'Export options' to keep a copy and then blank each Widget Logic field in turn until the problem goes. Once you've identified the problematic code, you can restore the rest with 'Import options'.
-
-= It's causing problems with Woo Commerce / other popular plugin =
-
-This is often, not always, fixed by trying the different 'Load Logic' options. The 'after query variables set' option looks like it might be a better default, try it.
-
-= What's this stuff in my sidebar when there are no widgets? =
-
-Since v .50 the widget logic code runs such that when dynamic_sidebar is called in a theme's code it will 'return false' if no widgets are present. In such cases many themes are coded to put in some default sidebar text in place of widgets, which is what you are seeing.
-
-Your options, if you want this default sidebar content gone, are to either edit the theme, or as a work around, add an empty text widget (no title, no content) to the end of the sidebar's widget list.
+You have a PHP syntax error in one of your widget's Widget Logic fields. Review them for errors. You might find it easiest to check by using 'Export options' and reading the code there (though be aware that single and double quotes are escaped with multiple backslash characters).
 
 = How do I get widget X on just my 'home' page? (Or on every page except that.) =
 
 There is some confusion between the [Main Page and the front page](http://codex.wordpress.org/Conditional_Tags#The_Main_Page). If you want a widget on your 'front page' whether that is a static page or a set of posts, use is_front_page(). If it is a page using is_page(x) does not work. If your 'front page' is a page and not a series of posts, you can still use is_home() to get widgets on that main posts page (as defined in Admin > Settings > Reading).
-
-= Logic using is_page() doesn't work =
-
-I believe this is fixed in 5.7.0. Let me know if that is not the case.
-
-If your theme calls the sidebar after the loop you should find that the wp_reset_query option fixes things. This problem is explained on the [is_page codex page](http://codex.wordpress.org/Function_Reference/is_page#Cannot_Be_Used_Inside_The_Loop).
 
 = How do I get a widget to appear both on a category page and on single posts within that category? =
 Take care with your conditional tags. There is both an `in_category` and `is_category` tag. One is used to tell if the 'current' post is IN a category, and the other is used to tell if the page showing IS for that category (same goes for tags etc). What you want is the case when:
@@ -78,16 +40,9 @@ which in proper PHP is:
 = How do I get a widget to appear when X, Y and Z? =
 Have a go at it yourself first. Check out the 'Writing Logic Code' section under [Other Notes](../other_notes/).
 
-= Why is Widget Logic so unfriendly, you have to be a code demon to use it? =
-This is sort of deliberate. I originally wrote it to be as flexible as possible with the thought of writing a drag'n'drop UI at some point. I never got round to it, because (I'm lazy and) I couldn't make it both look nice and let you fall back to 'pure code' (for the possibilities harder to cater for in a UI).
-
-The plugin [Widget Context](http://wordpress.org/extend/plugins/widget-context/) presents a nice UI and has a neat 'URL matching' function too.
-
 = Widgets appear when they shouldn't =
 
-It might be that your theme performs custom queries before calling the sidebar. Try the `wp_reset_query` option.
-
-Alternatively you may have not defined your logic tightly enough. For example when the sidebar is being processed, in_category('cheese') will be true if the last post on an archive page is in the 'cheese' category.
+It might be that you have not defined your logic tightly enough. For example when the sidebar is being processed, in_category('cheese') will be true if the last post on an archive page is in the 'cheese' category.
 
 Tighten up your definitions with PHPs 'logical AND' &&, for example:
 
@@ -96,10 +51,13 @@ Tighten up your definitions with PHPs 'logical AND' &&, for example:
 
 == Screenshots ==
 
-1. The 'Widget logic' field at work in standard widgets.
-2. The plugin options are at the foot of the usual widget admin page… `wp_reset_query` option, 'load logic point' and 'evaluate more than once'. You can also export and import your site's WL options as a plain text file for a quick backup/restore and to help troubleshoot issues.
+1. The "Widget logic" field in Block widgets.
 
 == Changelog ==
+
+= 6.0.0 =
+
+* WP 5.8 compatibility.
 
 = 5.10.4 =
 
